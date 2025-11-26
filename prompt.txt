@@ -1,0 +1,303 @@
+Yes, adding a bit of Angular is perfect for “Angular is a plus” – and you absolutely don’t need a huge front-end to make it interview-worthy.
+
+Let’s bolt on a small Angular UI that:
+	•	lists your feature flags
+	•	lets you toggle them on/off
+	•	(optionally) create a flag
+
+That’s more than enough to talk about confidently in 2 days.
+
+⸻
+
+0. Where it lives in your repo
+
+In your devstream-portfolio repo, create a sibling folder for the UI:
+
+devstream-portfolio/
+  backend/        # your Spring Boot app (current code)
+  frontend/       # Angular app (new)
+  infra/
+  ...
+
+If your backend isn’t in backend/ yet and just in the root, no worries—put Angular in frontend/ at the root.
+
+⸻
+
+1. Install Node & Angular CLI on the Pi
+
+On the Pi (VS Code Tunnel terminal):
+
+# Node (if you don't have a recent one)
+sudo apt update
+sudo apt install -y nodejs npm
+
+# (Optional but recommended) install an LTS Node via nvm instead, if apt is too old.
+
+# Angular CLI
+sudo npm install -g @angular/cli
+ng version
+
+You want Angular CLI 16+ ideally, but anything 15+ is okay.
+
+⸻
+
+2. Generate the Angular app
+
+From the repo root:
+
+cd frontend
+ng new devstream-ff-ui --routing --style=scss
+# When prompted:
+# - Add routing? Yes
+# - CSS preprocessor? SCSS
+
+This will create:
+
+frontend/devstream-ff-ui/
+  src/
+  angular.json
+  package.json
+  ...
+
+I’d then simplify:
+
+# (optional) move everything up one level so 'frontend' is the Angular root
+mv devstream-ff-ui/* devstream-ff-ui/.* . 2>/dev/null || true
+rmdir devstream-ff-ui
+
+So frontend/ itself is the Angular project root.
+
+⸻
+
+3. Wire it to your backend with a proxy
+
+Assuming your Spring Boot app runs on http://localhost:8080 and your flag API is under /api/flags (tweak if your paths differ).
+
+In frontend/ create proxy.conf.json:
+
+{
+  "/api": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
+
+Update package.json scripts:
+
+"scripts": {
+  "start": "ng serve --proxy-config proxy.conf.json",
+  "build": "ng build",
+  "test": "ng test",
+  ...
+}
+
+Now ng serve will let Angular call /api/... without CORS pain.
+
+⸻
+
+4. Make a Feature Flag service
+
+Generate a service and a component:
+
+cd frontend
+ng generate service features/feature-flags
+ng generate component features/flag-list
+
+src/app/features/feature-flag.model.ts
+
+export interface FeatureFlag {
+  id?: number;
+  flagKey: string;
+  description?: string;
+  enabled: boolean;
+  variantsJson?: string; // or whatever your backend uses
+}
+
+src/app/features/feature-flags.service.ts
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { FeatureFlag } from './feature-flag.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FeatureFlagsService {
+  private readonly baseUrl = '/api/flags';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<FeatureFlag[]> {
+    return this.http.get<FeatureFlag[]>(this.baseUrl);
+  }
+
+  toggle(id: number, enabled: boolean): Observable<FeatureFlag> {
+    return this.http.patch<FeatureFlag>(`${this.baseUrl}/${id}`, { enabled });
+  }
+
+  create(flag: FeatureFlag): Observable<FeatureFlag> {
+    return this.http.post<FeatureFlag>(this.baseUrl, flag);
+  }
+}
+
+Adjust paths/DTO fields if your backend differs.
+
+⸻
+
+5. Simple flag list component (MVP UI)
+
+src/app/features/flag-list/flag-list.component.ts
+
+import { Component, OnInit } from '@angular/core';
+import { FeatureFlagsService } from '../feature-flags.service';
+import { FeatureFlag } from '../feature-flag.model';
+
+@Component({
+  selector: 'app-flag-list',
+  templateUrl: './flag-list.component.html',
+  styleUrls: ['./flag-list.component.scss']
+})
+export class FlagListComponent implements OnInit {
+  flags: FeatureFlag[] = [];
+  loading = false;
+  error?: string;
+
+  constructor(private flagsService: FeatureFlagsService) {}
+
+  ngOnInit(): void {
+    this.loadFlags();
+  }
+
+  loadFlags(): void {
+    this.loading = true;
+    this.error = undefined;
+    this.flagsService.getAll().subscribe({
+      next: flags => {
+        this.flags = flags;
+        this.loading = false;
+      },
+      error: err => {
+        this.error = 'Failed to load flags';
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
+
+  onToggle(flag: FeatureFlag): void {
+    if (!flag.id) { return; }
+    const newValue = !flag.enabled;
+    this.flagsService.toggle(flag.id, newValue).subscribe({
+      next: updated => {
+        flag.enabled = updated.enabled;
+      },
+      error: err => {
+        console.error(err);
+        // optional: show toast
+      }
+    });
+  }
+}
+
+src/app/features/flag-list/flag-list.component.html
+
+<div class="page">
+  <h1>Feature Flags</h1>
+
+  <div *ngIf="loading">Loading flags...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading && flags.length">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Description</th>
+        <th>Enabled</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let flag of flags">
+        <td>{{ flag.flagKey }}</td>
+        <td>{{ flag.description }}</td>
+        <td>{{ flag.enabled ? 'ON' : 'OFF' }}</td>
+        <td>
+          <button (click)="onToggle(flag)">
+            Toggle
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && !flags.length">No flags found.</p>
+</div>
+
+Style file flag-list.component.scss can be minimal for now.
+
+⸻
+
+6. Hook the component into the app
+
+In src/app/app-routing.module.ts:
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { FlagListComponent } from './features/flag-list/flag-list.component';
+
+const routes: Routes = [
+  { path: '', redirectTo: 'flags', pathMatch: 'full' },
+  { path: 'flags', component: FlagListComponent },
+  { path: '**', redirectTo: 'flags' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+In app.component.html:
+
+<nav>
+  <a routerLink="/flags">Feature Flags</a>
+</nav>
+<router-outlet></router-outlet>
+
+
+⸻
+
+7. Run everything
+
+In one terminal (backend):
+
+# from backend or root
+./mvnw spring-boot:run
+# (or whatever you currently use)
+
+In another (frontend):
+
+cd frontend
+npm install
+npm start
+# ng serve --proxy-config proxy.conf.json on http://localhost:4200
+
+Then open http://localhost:4200 (via VS Code Tunnel → forwarded port in your iPad) and you should see your list + toggles.
+
+⸻
+
+8. How to talk about this in the interview
+
+You don’t need a fancy UI; you need a story:
+
+“I added a small Angular SPA on top of my Java feature-flag microservice. It calls the Spring Boot API via an Angular HttpClient service, lists flags, and allows toggling them. I used a dev proxy config to avoid CORS and set up simple routing and components. The idea was to demonstrate I can wire Angular into a REST backend quickly.”
+
+That alone ticks the “Angular plus” box.
+
+⸻
+
+If you want, next step I can:
+	•	tailor the FeatureFlag model and URLs to match your exact backend, and
+	•	give you a minimal proxy.conf.json, package.json scripts, and final folder layout ready to commit as your “Day 1 Angular UI” PR.

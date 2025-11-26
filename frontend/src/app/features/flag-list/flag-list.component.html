@@ -1,0 +1,29 @@
+<div class="page">
+    <h1>Feature Flags</h1>
+
+    <div *ngIf="loading"> Loading flags...</div>
+    <div *ngIf="error" class="error">{{ error }} </div>
+
+    <table *ngIf="!loading && flags.length">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Description</th>
+                <th>Enabled</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let flag of flags">
+                <td>{{ flag.flagKey }}</td>
+                <td>{{ flag.description }}</td>
+                <td>{{ flag.enabled ? 'ON' : 'OFF' }}</td>
+                <td>
+                    <button (click)="onToggle(flag)">Toggle</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p *ngIf="!loading && !flags.length"> No flags found. </p>
+</div>
