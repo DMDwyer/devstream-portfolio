@@ -12,5 +12,5 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY --from=build /app/target/devstream-portfolio-0.0.1-SNAPSHOT.jar .
-CMD ["java","-jar","devstream-portfolio-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /app/target/*.jar app.jar
+CMD ["java","-jar","/app/app.jar"]
