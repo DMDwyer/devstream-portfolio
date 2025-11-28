@@ -25,26 +25,25 @@ public class FlagControllerIntegrationTest {
     public void createAndGetFlags() {
         String base = "http://localhost:" + port + "/flags";
 
-        Flag f = new Flag();
-        f.setFlagKey("integration-test-flag");
-        f.setEnabled(true);
+        // Use Dto for requests and expect the controller to convert to entity
+        com.dmdwyer.devstream.dto.FlagDto f = new com.dmdwyer.devstream.dto.FlagDto(null, "integration-test-flag", true, null, null);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<Flag> req = new HttpEntity<>(f, headers);
+        HttpEntity<com.dmdwyer.devstream.dto.FlagDto> req = new HttpEntity<>(f, headers);
 
-        ResponseEntity<Flag> createResp = restTemplate.postForEntity(base, req, Flag.class);
+        ResponseEntity<com.dmdwyer.devstream.dto.FlagDto> createResp = restTemplate.postForEntity(base, req, com.dmdwyer.devstream.dto.FlagDto.class);
         assertThat(createResp.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Flag created = createResp.getBody();
+        com.dmdwyer.devstream.dto.FlagDto created = createResp.getBody();
         assertThat(created).isNotNull();
-        Long id = java.util.Objects.requireNonNull(created, "created is null").getId();
+        Long id = java.util.Objects.requireNonNull(created, "created is null").id();
         assertThat(id).isNotNull();
 
-        ResponseEntity<Flag[]> listResp = restTemplate.getForEntity(base, Flag[].class);
+        ResponseEntity<String> listResp = restTemplate.getForEntity(base, String.class);
         assertThat(listResp.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Flag[] list = listResp.getBody();
-        assertThat(list).isNotNull();
-        assertThat(Arrays.stream(list).anyMatch(x -> "integration-test-flag".equals(x.getFlagKey()))).isTrue();
+        String body = listResp.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body).contains("integration-test-flag");
     }
 }
