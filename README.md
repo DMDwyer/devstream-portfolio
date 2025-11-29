@@ -10,6 +10,7 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 - **Backend:** Spring Boot 3 / Java 21
 - **Infra:** Docker . Helm . Terraform
 - **CI/CD:** GitHub Actions / Tekton
+![CI](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml/badge.svg)
 - **Testing:** K6 . Allure
 
 ## Run
