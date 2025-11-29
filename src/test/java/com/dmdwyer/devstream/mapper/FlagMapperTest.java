@@ -3,6 +3,7 @@ package com.dmdwyer.devstream.mapper;
 import com.dmdwyer.devstream.dto.FlagDto;
 import com.dmdwyer.devstream.entity.Flag;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.mapstruct.factory.Mappers;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,4 +38,11 @@ public class FlagMapperTest {
     Flag entity = mapper.toEntity(dto);
     assertThat(entity.isEnabled()).isFalse();
   }
+  
+  @Test
+  public void generatedImplementationShouldBePresent() {
+    // Fail when no MapStruct generated implementation exists on the classpath
+    assertDoesNotThrow(() -> Class.forName("com.dmdwyer.devstream.mapper.FlagMapperImpl"));
+  }
+
 }
