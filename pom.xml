@@ -106,7 +106,7 @@
 					<execution>
 						<id>default-testCompile</id>
 						<goals>
-							<goal>test-compile</goal>
+							<goal>testCompile</goal>
 						</goals>
 						<configuration>
 							<!-- Fork the test-compile execution as well for consistent annotation processing -->
