@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: devstream-build
+spec:
+  workspaces:
+    - name: source
+      description: The source code to build
+  steps:
+    - name: maven-build
+      image: maven:3.9-eclipse-temurin-17
+      workingDir: /workspace
+      script: |
+        #!/bin/env sh
+        cp -R $(workspaces.source.path)/* .
+        mvn -B -DskipTests=false verify

@@ -9,8 +9,7 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 ## Stack
 - **Backend:** Spring Boot 3 / Java 21
 - **Infra:** Docker . Helm . Terraform
-- **CI/CD:** GitHub Actions / Tekton
-![CI](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml/badge.svg)
+- **CI/CD:** GitHub Actions ![CI](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml/badge.svg) / Tekton ![Tekton Pipeline](https://img.shields.io/badge/Tekton-Pipeline-blue?logo=tekton&logoColor=white)
 - **Testing:** K6 . Allure
 
 ## Run
@@ -57,7 +56,6 @@ Full request and response schemas are available in the project's Swagger spec. T
 - MapStruct generated mappers: `target/generated-sources/annotations/...` after building. If you change DTOs, rebuild to regenerate mappers.
 - The `enabled` field uses a boxed `Boolean` to allow null in partial updates; primitives will always be applied by MapStruct and connot be ignored.
 
-
 ## Terraform (Kubernetes namespace + config)
 The 'infra/terraform' folder contains Terraform code to provisioon:
 - A Kubernetes namespace for the service
@@ -68,5 +66,16 @@ cd infra/terraform
 terraform init
 terraform apply
 ```
+## Tekton CI/CD Pipeline
+The infra/tekton directory contains a lightweight Tekton Pipeline definition that mirrors the GitHub Actions CI workflow
+This demonstrates how the service could be built and tested inside a Kubernetes-native CI/CD system, a common modern DevOps practice.
 
+# Files Included
+- task-build.yaml - a Tekton Task that execues a Maven build and runs tests
+- pipeline.yaml - a Pipeline composed of the build Task
 
+# Running the Pipeline
+```bash
+kubectl apply -f infra/tekton/task-build.yaml
+kubectl apply -f infra/tekton/pipeline.yaml
+```
