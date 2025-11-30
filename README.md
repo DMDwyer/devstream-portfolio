@@ -58,4 +58,15 @@ Full request and response schemas are available in the project's Swagger spec. T
 - The `enabled` field uses a boxed `Boolean` to allow null in partial updates; primitives will always be applied by MapStruct and connot be ignored.
 
 
+## Terraform (Kubernetes namespace + config)
+The 'infra/terraform' folder contains Terraform code to provisioon:
+- A Kubernetes namespace for the service
+- A basic ConfigMap for feature flag defaults
+
+```bash
+cd infra/terraform
+terraform init
+terraform apply
+```
+
 
