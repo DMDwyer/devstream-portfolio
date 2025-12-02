@@ -1,6 +1,6 @@
 "BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
-"0","Feature Flags Management","0","Flag Mapper","2","0","Partial entity updates","0"
 "0","Application Infrastructure","0","Spring Boot Context","1","0","Application startup","0"
 "0","Feature Flags Management","0","Flag Controller API","1","0","Create and retrieve feature flags","0"
-"0","Feature Flags Management","0","Flag Mapper","1","0","DTO to Entity mapping","0"
 "0","Feature Flags Management","0","Flag Mapper","1","0","MapStruct code generation","0"
+"0","Feature Flags Management","0","Flag Mapper","2","0","Partial entity updates","0"
+"0","Feature Flags Management","0","Flag Mapper","1","0","DTO to Entity mapping","0"
