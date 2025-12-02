@@ -8,6 +8,6 @@ public record FlagDto(
   Long id,
   @NotBlank @Pattern(regexp = "^[a-z0-9_\\-\\.]+$") String flagKey,
   Boolean enabled,
-  @Size(max = 20000) String variantsJson,
-  @Size(max = 20000) String rulesJson
+  @Size(max = 20000) String rulesJson,
+  @Size(max = 20000) String variantsJson
 ) {}
