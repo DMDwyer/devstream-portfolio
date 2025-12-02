@@ -49,7 +49,7 @@ jobs:
 
       - name: Start application
         run: |
-          docker run -d --name app -p 8080:8080 devstream-portfolio:ci
+          docker run -d --name app --network host devstream-portfolio:ci
           
       - name: Wait for application to be ready
         run: |
@@ -72,10 +72,10 @@ jobs:
           echo "✓ Application health check passed"
 
       - name: Run k6 smoke tests
-        uses: grafana/k6-action@v0.3.1
-        with:
-          filename: ./src/test/k6/smoke.js
-          flags: --env BASE_URL=http://localhost:8080
+        run: |
+          docker run --rm --network host \
+            -v ${{ github.workspace }}/src/test/k6:/scripts \
+            grafana/k6 run /scripts/smoke.js
 
       - name: Show application logs on failure
         if: failure()
