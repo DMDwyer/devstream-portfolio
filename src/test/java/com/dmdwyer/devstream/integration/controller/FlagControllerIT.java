@@ -162,13 +162,15 @@ public class FlagControllerIT {
         FlagDto dto = new FlagDto(null, "eval-flag", true, rulesJson, null);
         restTemplate.postForEntity(baseUrl, new HttpEntity<>(dto), FlagDto.class);
 
-        ResponseEntity<String> evalResp = restTemplate.getForEntity(
+        @SuppressWarnings("rawtypes")
+        ResponseEntity<java.util.Map> evalResp = restTemplate.getForEntity(
             baseUrl + "/eval-flag/evaluate?userId=user123&country=IE",
-            String.class
+            java.util.Map.class
         );
 
         assertThat(evalResp.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(evalResp.getBody()).isEqualTo("ireland-variant");
+        assertThat(evalResp.getBody()).isNotNull();
+        assertThat(evalResp.getBody().get("variant")).isEqualTo("ireland-variant");
     }
 
     @Test
@@ -206,12 +208,14 @@ public class FlagControllerIT {
         assertThat(createResp.getBody()).isNotNull();
         assertThat(createResp.getBody().variantsJson()).isEqualTo(variantsJson);
 
-        ResponseEntity<String> evalResp = restTemplate.getForEntity(
+        @SuppressWarnings("rawtypes")
+        ResponseEntity<java.util.Map> evalResp = restTemplate.getForEntity(
             baseUrl + "/variants-flag/evaluate?userId=user456",
-            String.class
+            java.util.Map.class
         );
 
         assertThat(evalResp.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(evalResp.getBody()).isIn("A", "B");
+        assertThat(evalResp.getBody()).isNotNull();
+        assertThat(evalResp.getBody().get("variant")).isIn("A", "B");
     }
 }
