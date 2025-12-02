@@ -1,6 +1,7 @@
 package com.dmdwyer.devstream;
 
 import com.dmdwyer.devstream.entity.Flag;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,8 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Epic("Feature Flags Management")
+@Feature("Flag Controller API")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FlagControllerIntegrationTest {
 
@@ -22,6 +25,9 @@ public class FlagControllerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
+    @Story("Create and retrieve feature flags")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Integration test that creates a new feature flag via POST and verifies it can be retrieved via GET")
     public void createAndGetFlags() {
         String base = "http://localhost:" + port + "/flags";
 

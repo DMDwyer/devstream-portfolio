@@ -58,6 +58,36 @@ Full request and response schemas are available in the project's Swagger spec. T
 
 ## Quality & Test Reporting
 
+### Allure Test Reports
+
+The project uses Allure Framework for rich test reporting with detailed test execution history, categorization, and analytics.
+
+**Running tests and generating reports:**
+```bash
+# Run tests (generates allure-results/)
+./mvnw test
+
+# Generate and view HTML report
+./mvnw allure:serve
+```
+
+Or use the convenience script:
+```bash
+chmod +x generate-allure-report.sh
+./generate-allure-report.sh
+```
+
+**Features:**
+- Tests organized by Epic → Feature → Story
+- Severity levels (BLOCKER, CRITICAL, NORMAL)
+- Detailed test descriptions and execution history
+- Automatic report generation in CI/CD pipeline
+
+**CI/CD Integration:**
+- Test results uploaded as artifacts on every build
+- Allure reports generated and published automatically
+- Available in GitHub Actions artifacts tab
+
 ### k6 Smoke Tests
 
 The 
