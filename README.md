@@ -88,6 +88,12 @@ chmod +x generate-allure-report.sh
 - Allure reports generated and published automatically
 - Available in GitHub Actions artifacts tab
 
+### Integration Test with Testcontainers
+
+Some tests use [Testcontainers](https://testcontainers.org/) to run PostgreSQL in a disposable Docker container for realistic integration testing.
+
+This allows repository/service layers to be tested against a real database locally and in CI without relying on shared infrastructure.
+
 ### k6 Smoke Tests
 
 The 

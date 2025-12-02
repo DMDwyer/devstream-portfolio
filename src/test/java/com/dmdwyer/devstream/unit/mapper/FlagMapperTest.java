@@ -1,7 +1,8 @@
-package com.dmdwyer.devstream.mapper;
+package com.dmdwyer.devstream.unit.mapper;
 
 import com.dmdwyer.devstream.dto.FlagDto;
 import com.dmdwyer.devstream.entity.Flag;
+import com.dmdwyer.devstream.mapper.FlagMapper;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
