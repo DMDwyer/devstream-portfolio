@@ -9,8 +9,8 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 ## Stack
 - **Backend:** Spring Boot 3 / Java 21
 - **Infra:** Docker . Helm . Terraform
-- **CI/CD:** GitHub Actions ![CI](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml/badge.svg) / Tekton ![Tekton Pipeline](https://img.shields.io/badge/Tekton-Pipeline-blue?logo=tekton&logoColor=white)
-- **Testing:** K6 . Allure
+- **CI/CD:** GitHub Actions [![CI](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/DMDwyer/devstream-portfolio/actions/workflows/ci.yml) / Tekton ![Tekton Pipeline](https://img.shields.io/badge/Tekton-Pipeline-blue?logo=tekton&logoColor=white)
+- **Testing:** K6 . Allure [![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qameta)](https://dmdwyer.github.io/devstream-portfolio/allure-latest/)
 
 ## Run
 
