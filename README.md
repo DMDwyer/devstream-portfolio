@@ -56,6 +56,30 @@ Full request and response schemas are available in the project's Swagger spec. T
 - MapStruct generated mappers: `target/generated-sources/annotations/...` after building. If you change DTOs, rebuild to regenerate mappers.
 - The `enabled` field uses a boxed `Boolean` to allow null in partial updates; primitives will always be applied by MapStruct and connot be ignored.
 
+## Quality & Test Reporting
+
+### k6 Smoke Tests
+
+The 
+
+```bash
+# Start the application
+./mvnw -DskipTests spring-boot:run
+
+# Run k6 tests (use --network host on Linux)
+docker run --rm -i --network host \
+  -v "$PWD/src/test/k6:/scripts" \
+  grafana/k6 run /scripts/smoke.js
+```
+
+For Docker Desktop (Mac/Windows) or systems where `host.docker.internal` works:
+```bash
+docker run --rm -i \
+  -e BASE_URL=http://host.docker.internal:8080 \
+  -v "$PWD/src/test/k6:/scripts" \
+  grafana/k6 run /scripts/smoke.js
+```
+
 ## Terraform (Kubernetes namespace + config)
 The 'infra/terraform' folder contains Terraform code to provisioon:
 - A Kubernetes namespace for the service
