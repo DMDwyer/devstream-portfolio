@@ -116,6 +116,25 @@ docker run --rm -i \
   grafana/k6 run /scripts/smoke.js
 ```
 
+## Observability
+
+The service exposes production-grade health, readiness and metrics endpoints via Springboot actuator and micrometer
+
+### Endpoints
+- `/actuator/health/livenes`
+- `/actuator/health/liveness`
+- `/actuator/prometheus` (Prometheus-formatted metrics)
+- `/actuator/metrics`
+
+### Custome Metrics
+A custom `flag_evaluation_total` metric tracks the number of flag evaluations.
+
+This is compatible with:
+- Kubernetes probes
+- Prometheus scraping
+- Grafana dashboards
+- k6 smoke/performance tests
+
 ## Terraform (Kubernetes namespace + config)
 The 'infra/terraform' folder contains Terraform code to provisioon:
 - A Kubernetes namespace for the service

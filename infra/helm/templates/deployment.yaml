@@ -5,6 +5,10 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "devstream-portfolio.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8080"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -24,7 +28,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            {{- range .Values.evn }}
+            {{- range .Values.env }}
             - name: {{ .name }}
               value: {{ .value | quote }}
             {{- end }}
