@@ -6,6 +6,8 @@ import com.dmdwyer.devstream.mapper.FlagMapper;
 import com.dmdwyer.devstream.repository.FlagRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,13 @@ public class FlagService {
   private final FlagMapper mapper;
   private final ObjectMapper om;
   private final Logger logger = LoggerFactory.getLogger(FlagService.class);
+  private final Counter flagEvaluationCounter;
 
-  public FlagService(FlagRepository repo, FlagMapper mapper, ObjectMapper om) {
+  public FlagService(FlagRepository repo, FlagMapper mapper, ObjectMapper om, MeterRegistry meterRegistry) {
     this.repo = repo; this.mapper = mapper; this.om = om;
+    this.flagEvaluationCounter = Counter.builder("flag.evaluations")
+        .description("Number of flag evaluations")
+        .register(meterRegistry);
   }
 
   // CRUD
@@ -42,6 +48,7 @@ public class FlagService {
   }
 
   public Optional<FlagDto> get(String key) {
+    flagEvaluationCounter.increment();
     return repo.findByFlagKey(key).map(mapper::toDto);
   }
 
