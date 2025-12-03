@@ -36,3 +36,40 @@ build/
 .allure/
 allure-results/
 allure-report/
+
+### Coverage ###
+.sonar/
+.scannerwork/
+jacoco.exec
+*.coverage
+coverage/
+
+### Frontend/Node ###
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+### OS ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Temporary files ###
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+.*.swp
+
+### Environment ###
+.env
+.env.local
+.env.*.local
