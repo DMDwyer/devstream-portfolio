@@ -35,7 +35,7 @@ After setting up secrets:
 2. Check Actions tab for successful coverage uploads
 3. Visit dashboards:
    - Codecov: https://codecov.io/gh/DMDwyer/devstream-portfolio
-   - SonarCloud: https://sonarcloud.io/project/overview?id=DMDwyer_devstream-portfolio
+   - SonarCloud: https://sonarcloud.io/project/overview?id=dmdwyer-devstream-portfolio
    - Coveralls: https://coveralls.io/github/DMDwyer/devstream-portfolio
 
 ## Local Testing
