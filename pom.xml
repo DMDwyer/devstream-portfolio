@@ -35,7 +35,7 @@
 		<allure-maven.version>2.12.0</allure-maven.version>
 		<maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
 		<jacoco.version>0.8.12</jacoco.version>
-		<sonar.organization>dmdwyer</sonar.organization>
+		<sonar.organization>dmdwyer-devstream-portfolio</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.projectKey>DMDwyer_devstream-portfolio</sonar.projectKey>
 	</properties>
