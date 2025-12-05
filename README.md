@@ -21,6 +21,8 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 - **Kubernetes-native CI:** Tekton ![Tekton Pipeline](https://img.shields.io/badge/Tekton-Pipeline-blue?logo=tekton&logoColor=white)
 - **Testing:** JUnit 5 . Testcontainers . K6 smoke tests 
 - **Reporting:** Allure [![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qameta)](https://dmdwyer.github.io/devstream-portfolio/allure-latest/)
+- **Code Coverage:** JaCoCo [![codecov](https://codecov.io/gh/DMDwyer/devstream-portfolio/branch/main/graph/badge.svg)](https://codecov.io/gh/DMDwyer/devstream-portfolio) [![Coverage Status](https://coveralls.io/repos/github/DMDwyer/devstream-portfolio/badge.svg?branch=main)](https://coveralls.io/github/DMDwyer/devstream-portfolio?branch=main)
+- **Code Quality:** SonarCloud [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DMDwyer_devstream-portfolio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DMDwyer_devstream-portfolio)
 - **Observability:** Spring Boot Actuator . Micrometer Prometheus Registry
 
 ### High-Level Flow
@@ -89,6 +91,36 @@ Full request and response schemas are available in the project's Swagger spec. T
 
 ## Quality & Test Reporting
 
+### Code Coverage with JaCoCo
+
+The project uses JaCoCo for comprehensive code coverage analysis with minimum thresholds of 80% for line and branch coverage.
+
+**Running tests with coverage:**
+```bash
+# Run tests and generate coverage report
+./mvnw test jacoco:report
+
+# View report in browser
+open target/site/jacoco/index.html
+```
+
+Or use the convenience script:
+```bash
+chmod +x scripts/generate-coverage-report.sh
+./scripts/generate-coverage-report.sh
+```
+
+**Coverage enforcement:**
+- Minimum 80% line coverage required
+- Minimum 80% branch coverage required
+- Build fails if thresholds are not met
+
+**Coverage integrations:**
+- **Codecov:** Automated coverage tracking with PR comments and trend analysis
+- **Coveralls:** Alternative coverage reporting with GitHub integration
+- **SonarCloud:** Comprehensive code quality analysis including coverage metrics
+- **Allure:** Coverage data integrated into test reports
+
 ### Allure Test Reports
 
 The project uses Allure Framework for rich test reporting with detailed test execution history, categorization, and analytics.
@@ -104,8 +136,8 @@ The project uses Allure Framework for rich test reporting with detailed test exe
 
 Or use the convenience script:
 ```bash
-chmod +x generate-allure-report.sh
-./generate-allure-report.sh
+chmod +x scripts/generate-allure-report.sh
+./scripts/generate-allure-report.sh
 ```
 
 **Features:**
@@ -118,8 +150,37 @@ chmod +x generate-allure-report.sh
 - Test results uploaded as artifacts on every build
 - Allure reports generated and published automatically
 - Available in GitHub Actions artifacts tab
+- JaCoCo coverage reports integrated
 
-### Integration Test with Testcontainers
+### SonarCloud Code Quality
+
+The project integrates with SonarCloud for comprehensive code quality and security analysis.
+
+**Metrics tracked:**
+- Code coverage (from JaCoCo)
+- Code smells and technical debt
+- Security vulnerabilities
+- Code duplication
+- Maintainability rating
+- Reliability rating
+- Security rating
+
+**Running analysis locally:**
+```bash
+./mvnw clean verify sonar:sonar \
+  -Dsonar.projectKey=DMDwyer_devstream-portfolio \
+  -Dsonar.organization=dmdwyer \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.login=YOUR_SONAR_TOKEN
+```
+
+**CI/CD Integration:**
+- Automatic analysis on every push to main
+- PR decoration with quality gate status
+- Historical trend tracking
+- Dashboard: [https://sonarcloud.io/project/overview?id=DMDwyer_devstream-portfolio](https://sonarcloud.io/project/overview?id=DMDwyer_devstream-portfolio)
+
+### Integration Tests with Testcontainers
 
 Some tests use [Testcontainers](https://testcontainers.org/) to run PostgreSQL in a disposable Docker container for realistic integration testing.
 
