@@ -12,7 +12,7 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 - **Testcontainers**, **k6** and **Allure** cover integration, smoke and reporting
 
 ## Stack
-- **Backend:** Spring Boot 3 / Java 21
+- **Backend:** Spring Boot 3 / Java 21 / Kotlin 2
 - **Data:** PostgreSQL
 - **Build:** Maven . Docker (multi-stage)
 - **Runtime:** Docker Compose . Kubernetes (via Helm)
@@ -31,18 +31,27 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 flowchart LR
   API[Spring Boot API] --> DB[(PostgreSQL)]
   API --> Metrics[Actuator / Micrometer]
-  Metrics --> Prom[Prometheus / Grafana]
+  Metrics -.-> Prom[Prometheus / Grafana]
 
   subgraph CI/CD
-    GH[GitHub Actions] --> Build[Build & Test]
-    Build --> Image[Docker Image]
-    Helm --> K8s[(Kubernetes Namespace)]
-    Tekton[Tekton Pipeline] --> K8s
+    GH[GitHub Actions] --> Build[Maven Build & Test]
+    Build --> Coverage[JaCoCo / SonarCloud]
+    Build --> Docker[Docker Image]
+    Docker --> Artifacts[Artifacts]
   end
 
-  k6[k6 Smoke Tests] --> API
-  Testcontainers[Testcontainers] --> DB
-  Allure[Allure Reports] --> GH
+  subgraph Testing
+    Test[JUnit + Testcontainers] --> DB
+    k6[k6 Smoke Tests] --> API
+    Build --> Reports[Allure Reports]
+    Reports --> Pages[GitHub Pages]
+  end
+
+  subgraph Deployment
+    Helm[Helm Charts] --> K8s[(Kubernetes)]
+    Tekton[Tekton Pipeline] --> K8s
+    Docker --> K8s
+  end
 ````
 
 ## Run

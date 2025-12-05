@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.dmdwyer.devstream.dto.FlagDto;
 import com.dmdwyer.devstream.service.FlagService;
+import com.dmdwyer.devstream.service.FlagEvaluationService;
 
 import java.util.Map;
 
@@ -15,8 +16,12 @@ import java.util.Map;
 @RequestMapping("/flags")
 public class FlagController {
   private final FlagService service;
+  private final FlagEvaluationService flagEvaluationService;
 
-  public FlagController(FlagService service) { this.service = service; }
+  public FlagController(FlagService service, FlagEvaluationService flagEvaluationService) { 
+    this.service = service;
+    this.flagEvaluationService = flagEvaluationService;
+  }
 
   @PostMapping
   public ResponseEntity<FlagDto> create(@Valid @RequestBody FlagDto dto) {
@@ -52,5 +57,10 @@ public class FlagController {
     attrs.remove("userId");
     String variant = service.evaluate(key, userId, attrs);
     return ResponseEntity.ok(Map.of("key", key, "userId", userId, "variant", variant));
+  }
+
+  @GetMapping("/flag-status")
+  public String getFlagStatus(@RequestParam String flagKey, @RequestParam boolean enabled) {
+    return flagEvaluationService.evaluateFlag(flagKey, enabled);
   }
 }
