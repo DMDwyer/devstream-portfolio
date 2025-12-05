@@ -22,7 +22,7 @@ A compact showcase of a Spring Boot application and accompanying infrastructure 
 - **Testing:** JUnit 5 . Testcontainers . K6 smoke tests 
 - **Reporting:** Allure [![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qameta)](https://dmdwyer.github.io/devstream-portfolio/allure-latest/)
 - **Code Coverage:** JaCoCo [![codecov](https://codecov.io/gh/DMDwyer/devstream-portfolio/branch/main/graph/badge.svg)](https://codecov.io/gh/DMDwyer/devstream-portfolio) [![Coverage Status](https://coveralls.io/repos/github/DMDwyer/devstream-portfolio/badge.svg?branch=main)](https://coveralls.io/github/DMDwyer/devstream-portfolio?branch=main)
-- **Code Quality:** SonarCloud [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dmdwyer-devstream-portfolio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dmdwyer-devstream-portfolio)
+- **Code Quality:** SonarCloud [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DMDwyer_devstream-portfolio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DMDwyer_devstream-portfolio)
 - **Observability:** Spring Boot Actuator . Micrometer Prometheus Registry
 
 ### High-Level Flow
