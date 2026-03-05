@@ -17,7 +17,7 @@ resources:
     cpu: "100m"
     memory: "256Mi"
 
-evn:
+env:
   - name: SPRING_DATASOURCE_URL
     value: jdbc:postgresql://db:5432/devstream
   - name: SPRING_DATASOURCE_USERNAME
