@@ -1,11 +1,11 @@
 variable "kubeconfig_path" {
   type        = string
-  default     = "Path to kubeconfig file"
-  description = "~/.kube/config"
+  description     = "Path to kubeconfig file"
+  default = "~/.kube/config"
 }
 
 variable "namespace" {
   type        = string
-  default     = "Kubernetes namespace for devStream-portfolio"
-  description = "devstream"
+  description     = "Kubernetes namespace for devStream-portfolio"
+  default = "devstream"
 }
