@@ -1,5 +1,5 @@
 # --- Build stage ---
-ARG PLATFORM=linux/amd64
+ARG PLATFORM=linux/arm64
 FROM --platform=$PLATFORM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
