@@ -72,10 +72,21 @@ jobs:
           path: allure-results/
           retention-days: 1
 
-      - name: Build Docker image
-        run: |
-          docker build -t devstream-portfolio:ci -f infra/docker/Dockerfile .
-          docker save devstream-portfolio:ci > /tmp/app-image.tar
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (amd64 for smoke test)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: infra/docker/Dockerfile
+          platforms: linux/amd64
+          build-args: PLATFORM=linux/amd64
+          load: true
+          tags: devstream-portfolio:ci
+
+      - name: Save Docker image
+        run: docker save devstream-portfolio:ci > /tmp/app-image.tar
 
       - name: Upload Docker image
         uses: actions/upload-artifact@v4
