@@ -33,7 +33,12 @@ spec:
               value: {{ .value | quote }}
             {{- end }}
           resources:
-            {{ toYaml .Values.resources | indent 12 }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+              memory: {{ .Values.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu | quote }}
+              memory: {{ .Values.resources.requests.memory | quote }}
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness

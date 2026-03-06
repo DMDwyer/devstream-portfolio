@@ -1,7 +1,10 @@
 replicaCount: 1
 
+nameOverride: ""
+fullnameOverride: ""
+
 image:
-  repository: ghcr.io/dwyer/devstream-portfolio
+  repository: ghcr.io/dmdwyer/devstream-portfolio
   pullPolicy: IfNotPresent
   tag: "latest"
 
@@ -19,10 +22,21 @@ resources:
 
 env:
   - name: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://db:5432/devstream
+    value: jdbc:postgresql://devstream-portfolio-db:5432/devstream
   - name: SPRING_DATASOURCE_USERNAME
     value: dev
   - name: SPRING_DATASOURCE_PASSWORD
     value: dev
   - name: SPRING_PROFILES_ACTIVE
     value: k8s
+
+postgres:
+  image:
+    repository: postgres
+    version: "16"
+  database: devstream
+  username: dev
+  password: dev
+  persistence:
+    enabled: false
+    size: 10Gi

@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devstream-portfolio.fullname" . }}-ingress
+  labels:
+    app.kubernetes.io/name: {{ include "devstream-portfolio.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - http:
+      paths:
+      # Backend API routes
+      - path: /flags
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "devstream-portfolio.fullname" . }}
+            port:
+              number: 80
+      - path: /actuator
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "devstream-portfolio.fullname" . }}
+            port:
+              number: 80
+      - path: /swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "devstream-portfolio.fullname" . }}
+            port:
+              number: 80
+      # Frontend (Angular SSR — catches everything else)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "devstream-portfolio.fullname" . }}-frontend
+            port:
+              number: 80
