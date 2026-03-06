@@ -9,3 +9,9 @@ variable "namespace" {
   description     = "Kubernetes namespace for devStream-portfolio"
   default = "devstream"
 }
+
+variable "image_tag" {
+  type        = string
+  description = "Docker image tag to deploy — set from CI via github.sha"
+  default     = "latest"
+}
