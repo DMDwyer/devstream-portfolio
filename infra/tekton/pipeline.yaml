@@ -3,12 +3,31 @@ kind: Pipeline
 metadata:
   name: devstream-ci-pipeline
 spec:
+  params:
+  - name: image-tag
+    type: string
+    default: "latest"
   workspaces:
-    - name: shared-workspace
+  - name: shared-workspace
   tasks:
-    - name: build-and-test
-      taskRef:
-        name: devstream-build
-      workspaces:
-        - name: source
-          workspace: shared-workspace
+  - name: build-and-test
+    taskRef:
+      name: devstream-build
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+  - name: build-image
+    runAfter: ["build-and-test"]
+    taskRef:
+      resolver: cluster
+      params:
+      - name: kind
+        value: Task
+      - name: name
+        value: buildah # Tekton catalog task for building OCI images
+    params:
+    - name: IMAGE
+      value: "ghcr.io/dmdwyer/devstream-portfolio:$(params.image-tag)"
+    workspaces:
+    - name: source
+      workspace: shared-workspace
