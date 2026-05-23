@@ -7,7 +7,7 @@ import { FeatureFlag } from './feature-flag.model';
   providedIn: 'root'
 })
 export class FeatureFlagsService {
-  private readonly baseUrl = '/api/flags';
+  private readonly baseUrl = '/api/v1/flags';
 
     constructor(private http: HttpClient) {}
 
